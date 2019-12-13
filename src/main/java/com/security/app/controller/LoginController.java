@@ -31,22 +31,10 @@ public class LoginController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-//	@RequestMapping(value = "/login", method = RequestMethod.GET)
-//    public String login() {
-//		System.out.println("In /login controller");
-//        return "login";
-//    }
-//	
 	
 	@RequestMapping(value = "/postLogin", method = RequestMethod.GET)
     public ModelAndView postLogin(Model model, HttpSession session) {
         System.out.println("in to the post login controller");
-        // read principal out of security context and set it to session
-       // UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-       // validatePrinciple(authentication.getPrincipal());
-       // UserLogin loggedInUser = ((LoginUserDetails) authentication.getPrincipal()).getUserDetails();
-      //  model.addAttribute("currentUser", loggedInUser.getUsername());
-       // session.setAttribute("userId", loggedInUser.getId());
         return new ModelAndView("welcome");
     }
 	
@@ -84,19 +72,6 @@ public class LoginController {
        System.out.println(" In controller with Sign up");
         return new ModelAndView("signup");
     }
-	
-	
-	
-
-	
-	
-//	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
-//	public ModelAndView welcomePage() {
-//		System.out.println("in welcome Controller with view return");
-//		return new ModelAndView("welcome");
-//	}
-//	
-	
 	
 
 }
