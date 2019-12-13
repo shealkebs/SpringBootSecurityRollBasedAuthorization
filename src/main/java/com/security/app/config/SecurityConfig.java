@@ -1,6 +1,7 @@
 package com.security.app.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -10,13 +11,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.security.app.service.SecureLoginService;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
 	@Bean
 	public UserDetailsService userDetailsService() {
@@ -27,16 +28,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-	
-	private AuthenticationSuccessHandler authenticationSuccessHandler;
-	@Autowired
-	public SecurityConfig (AuthenticationSuccessHandler authenticationSuccessHandler) {
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-    }
-	
+
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
-		System.out.println("inside DaoAuthenticationProvider");
+		//System.out.println("inside DaoAuthenticationProvider");
+		logger.info("inside DaoAuthenticationProvider");
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService());
 		 authProvider.setPasswordEncoder(passwordEncoder());
@@ -45,7 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) {
-		System.out.println("inside AuthenticationManagerBuilder");
+		//System.out.println("inside AuthenticationManagerBuilder");
+		logger.info("inside AuthenticationManagerBuilder");
 		auth.authenticationProvider(authenticationProvider());
 	}
 
@@ -53,28 +50,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		System.out.println("in HttpSecurity Config");
-		http.authorizeRequests()
-				.antMatchers("/welcomeAdmin").access("hasRole('ROLE_Admin')")
-				.antMatchers("/welcomeUSER").access("hasRole('ROLE_USER')")
-				.and()
-			.formLogin().loginPage("/login")
+		http.authorizeRequests().antMatchers("/firstPage").hasAnyRole("ADMIN", "USER").and().authorizeRequests()
+				.antMatchers("/login", "/resource/**").permitAll().and().formLogin().loginPage("/login")
 				.loginProcessingUrl("/doLogin")
 				.usernameParameter("username").passwordParameter("password").permitAll()
-				.successHandler(authenticationSuccessHandler)
-				//.defaultSuccessUrl("/postLogin",true)
-				.failureUrl("/loginFailed")
-				.and()
-				.logout().logoutUrl("/doLogout").logoutSuccessUrl("/logout").permitAll()
-				.and()
-                .csrf().disable();
+				.defaultSuccessUrl("/postLogin",true)
+				.successForwardUrl("/postLogin").failureUrl("/loginFailed").and()
+				.logout().logoutUrl("/doLogout").logoutSuccessUrl("/logout").permitAll().and().csrf().disable();
 	}
-	
-//	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//		http.authorizeRequests()
-//				.antMatchers("/welcomeAdmin").access("hasRole('ROLE_Admin')")
 
+//	@Override
+//	public  void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		System.out.println("in configure AuthenticationManagerBuilder");
+//		auth.inMemoryAuthentication().withUser("Gaurav")
+//				.password("{noop}Gaurav@123").roles("USER");
+//	}
 //	
 //	@Override
 //	public void configure(HttpSecurity http) throws Exception {

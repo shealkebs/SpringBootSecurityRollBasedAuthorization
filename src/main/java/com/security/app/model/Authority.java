@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "authority")
@@ -16,21 +17,22 @@ public class Authority {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-//	@Enumerated(EnumType.STRING)
-	private String role;
+	@Enumerated(EnumType.STRING)
+	@NotEmpty(message = "Authority type not be empty")
+	private AuthorityType name;
 
-//	enum AuthorityType {
-//		ROLE_ADMIN, ROLE_USER
-//	}
+	enum AuthorityType {
+		ROLE_ADMIN, ROLE_USER
+	}
 
 	public Authority() {
 		super();
 	}
 
-	public Authority(Integer id, String role) {
+	public Authority(Integer id, AuthorityType name) {
 		super();
 		this.id = id;
-		this.role = role;
+		this.name = name;
 	}
 
 	public Integer getId() {
@@ -41,17 +43,17 @@ public class Authority {
 		this.id = id;
 	}
 
-	public String getRole() {
-		return role;
+	public AuthorityType getName() {
+		return name;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setName(AuthorityType name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return "Authority [id=" + id + ", Role=" + role + "]";
+		return "Authority [id=" + id + ", name=" + name + "]";
 	}
 
 }

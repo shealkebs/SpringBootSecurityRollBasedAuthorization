@@ -19,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -33,10 +34,12 @@ public class UserLogin implements Serializable{
 	 	@Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Integer id;
-	    @NotEmpty
-	    @Column(nullable = false, unique = true)
+	    @NotEmpty(message = "username must not be empty")
+	    @Column(nullable = false)
+	    @Pattern(regexp="^[A-Za-z]*$")
 	    private String username;
-	    @NotEmpty
+	    @NotEmpty(message = "password not be empty")
+	  // @Pattern(regexp="^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,12}$")
 	    private String password;
 	    @Transient
 	    private String passwordConfirm;
@@ -44,48 +47,40 @@ public class UserLogin implements Serializable{
 	    private String role;
 	    @Transient
 	    private String userMail;
-	    @Transient
-	    private int statusCode;
+	    
 		
-		public int getStatusCode() {
-			return statusCode;
-		}
-
-		public void setStatusCode(int statusCode) {
-			this.statusCode = statusCode;
-		}
 		@CreationTimestamp
 		@Temporal(TemporalType.TIMESTAMP)
 		@Column(name = "dateCreated", nullable = false)
 	    private Date dateCreated;
 	    
-	    
+	    public String getPasswordConfirm() {
+			return passwordConfirm;
+		}
+		public void setPasswordConfirm(String passwordConfirm) {
+			this.passwordConfirm = passwordConfirm;
+		}
 		@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	    @JoinTable(name = "user_authority",
 	            joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
 	            inverseJoinColumns = { @JoinColumn(name = "authority_id", referencedColumnName = "id") })
-	    private Set<Authority> authorities;
+	    private Set<Authority> authorities = new HashSet<>();
 	    
 	    
 		public UserLogin() {
 			super();
 		}
 		
-		
 		public UserLogin(Integer id, @NotEmpty String username, @NotEmpty String password, String passwordConfirm,
-				String role, String userMail, int statusCode, Date dateCreated, Set<Authority> authorities) {
+				Date dateCreated, Set<Authority> authorities) {
 			super();
 			this.id = id;
 			this.username = username;
 			this.password = password;
 			this.passwordConfirm = passwordConfirm;
-			this.role = role;
-			this.userMail = userMail;
-			this.statusCode = statusCode;
 			this.dateCreated = dateCreated;
 			this.authorities = authorities;
 		}
-
 		public Integer getId() {
 			return id;
 		}
@@ -127,12 +122,6 @@ public class UserLogin implements Serializable{
 		}
 		public void setUserMail(String userMail) {
 			this.userMail = userMail;
-		}
-		public String getPasswordConfirm() {
-			return passwordConfirm;
-		}
-		public void setPasswordConfirm(String passwordConfirm) {
-			this.passwordConfirm = passwordConfirm;
 		}
 		@Override
 		public String toString() {

@@ -8,6 +8,4 @@ public interface UserLoginRepository extends CrudRepository<UserLogin, Integer>{
 
 	UserLogin getUserByUsername(String username);
 
-
-
 }

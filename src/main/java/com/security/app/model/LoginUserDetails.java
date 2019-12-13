@@ -20,8 +20,8 @@ public class LoginUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		System.out.println("in to the GrantedAuthority> getAuthorities()");
-		 return userLogin.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getRole().toString())).collect(Collectors.toList());
+		
+		 return userLogin.getAuthorities().stream().map(authority -> new SimpleGrantedAuthority(authority.getName().toString())).collect(Collectors.toList());
 	}
 
 	@Override
