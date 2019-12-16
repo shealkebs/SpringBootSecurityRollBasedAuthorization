@@ -6,7 +6,7 @@ package com.security.app.controller;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.security.app.model.LoginUserDetails;
 import com.security.app.model.UserLogin;
 import com.security.app.service.SecureLoginService;
 
@@ -44,29 +45,36 @@ public class LoginController {
 	@RequestMapping(value = "/postLogin", method = RequestMethod.GET)
     public ModelAndView postLogin(Model model, HttpSession session) {
         System.out.println("in to the post login controller");
-        return new ModelAndView("welcome");
+         return new ModelAndView("welcome");
     }
 
+	private void validatePrinciple(Object principal) {
+		if (!(principal instanceof LoginUserDetails)) {
+			System.out.println("in exception");
+            throw new  IllegalArgumentException("Principal can not be null!");
+        }
+	}
+	//method used in roll based routing authentication purpose
+	private void verifyAuthentication(Model model, HttpSession session){
+		UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+	    System.out.println(SecurityContextHolder.getContext().getAuthentication());
+		validatePrinciple(authentication.getPrincipal());
+	    UserLogin loggedInUser = ((LoginUserDetails) authentication.getPrincipal()).getUserDetails();
+	    model.addAttribute("currentUser", loggedInUser.getUsername());
+	    session.setAttribute("userId", loggedInUser.getId());
+		}
 
 	@RequestMapping(value = "/adminPage", method = RequestMethod.GET)
-    public ModelAndView adminPage() {
-		
-		if(SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
-		{
-			System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+    public ModelAndView adminPage(Model model, HttpSession session) {
+		verifyAuthentication(model, session);
         return new ModelAndView("welcomeAdmin");
-		}
-		return new ModelAndView("unauthorized");
     }
 	
 	@RequestMapping(value = "/userPage", method = RequestMethod.GET)
-    public ModelAndView userPage() {
-		if(SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
-		{
-			System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+    public ModelAndView userPage(Model model, HttpSession session) {
+		verifyAuthentication(model, session);
         return new ModelAndView("welcomeUser");
-		}
-        return new ModelAndView("unauthorized");
+
     }
 	
 	@RequestMapping(value = "/loginFailed", method = RequestMethod.GET)
