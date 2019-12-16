@@ -9,7 +9,10 @@
 <title>Welcome User</title>
 </head>
 <body>
-<h2>Welcome User</h2>
+	<h2>Welcome User</h2>
+		<form:form action="doLogout" method="get">
+			<button type="submit">Logout</button>
+		</form:form>
 </body>
 </html>
 

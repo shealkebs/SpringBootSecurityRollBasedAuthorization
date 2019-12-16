@@ -3,7 +3,7 @@ package com.security.app.service;
 import java.util.Arrays;
 import java.util.HashSet;
 
-import org.hibernate.query.criteria.internal.predicate.IsEmptyPredicate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,11 +35,9 @@ public class SecureLoginService implements UserDetailsService {
 		UserLogin userLogin=userLoginRepository.getUserByUsername(username);
     	if (userLogin == null) {
             throw new UsernameNotFoundException("User not found.");
-        }
-        
+        }     
         return new LoginUserDetails(userLogin);
 	}
-
 	public UserLogin signupUser(UserLogin userLogin) {
 		
 		Authority authority =userAuthorityRepository.findByRole(userLogin.getRole());
@@ -50,7 +48,6 @@ public class SecureLoginService implements UserDetailsService {
 		if(user!=null) {
 			SimpleMailMessage message = new SimpleMailMessage();
 			if (userLogin.getUserMail() != null) {
-
 				message.setTo(userLogin.getUserMail());
 				message.setSubject("Sign up Details");
 				message.setText("The Entered Details by User : "+userLogin.getUsername()+ " With Password : "+userLogin.getPasswordConfirm());
@@ -60,7 +57,7 @@ public class SecureLoginService implements UserDetailsService {
 			return user;
 		}
 		}
-		//userName already exhist
+		//userName already exist
 		user.setStatusCode(400);
 		return user;
 	}

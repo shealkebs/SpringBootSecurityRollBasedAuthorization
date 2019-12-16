@@ -5,11 +5,12 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Failed</title>
+<title>UnAuthorized</title>
 </head>
 <body>
-<h2>Login Fail Try Again </h2><br> &nbsp;
-<a href="login" >Login</a>
+<h2>UnAuthorized Request</h2>
+
+<a href="login">Login</a>
 </body>
 </html>
 

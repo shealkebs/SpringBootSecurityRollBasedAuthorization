@@ -10,9 +10,8 @@
 </head>
 <body>
 <h2>Welcome </h2>
-<a href="welcomeAdmin">Welcome Admin</a>
-<a href="welcomeUser">Welcome User</a>
-<a href="login.jsp">Login</a>
+
+<a href="login">Login</a>
 </body>
 </html>
 

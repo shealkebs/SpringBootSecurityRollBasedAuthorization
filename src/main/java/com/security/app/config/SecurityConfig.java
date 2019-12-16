@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,6 +15,7 @@ import com.security.app.service.SecureLoginService;
 
 @Configuration
 @EnableWebSecurity
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
@@ -28,12 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 	
-	private AuthenticationSuccessHandler authenticationSuccessHandler;
-	@Autowired
-	public SecurityConfig (AuthenticationSuccessHandler authenticationSuccessHandler) {
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-    }
-	
 	@Bean
 	public DaoAuthenticationProvider authenticationProvider() {
 		System.out.println("inside DaoAuthenticationProvider");
@@ -43,22 +37,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return authProvider;
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) {
-		System.out.println("inside AuthenticationManagerBuilder");
-		auth.authenticationProvider(authenticationProvider());
-	}
-
-	
+	private AuthenticationSuccessHandler authenticationSuccessHandler;
+	@Autowired
+	public SecurityConfig (AuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+    }
+		
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		System.out.println("in HttpSecurity Config");
 		http.authorizeRequests()
 				.antMatchers("/welcomeAdmin").access("hasRole('ROLE_Admin')")
+				
 				.antMatchers("/welcomeUSER").access("hasRole('ROLE_USER')")
+				
 				.and()
-			.formLogin().loginPage("/login")
+			.formLogin()
+				.loginPage("/login")
 				.loginProcessingUrl("/doLogin")
 				.usernameParameter("username").passwordParameter("password").permitAll()
 				.successHandler(authenticationSuccessHandler)
@@ -69,11 +65,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
                 .csrf().disable();
 	}
-	
+
+
 //	@Override
-//	protected void configure(HttpSecurity http) throws Exception {
-//		http.authorizeRequests()
-//				.antMatchers("/welcomeAdmin").access("hasRole('ROLE_Admin')")
+//	protected void configure(AuthenticationManagerBuilder auth) {
+//		System.out.println("inside AuthenticationManagerBuilder");
+//		auth.authenticationProvider(authenticationProvider());
+//	}
+//	
+	
 
 //	
 //	@Override

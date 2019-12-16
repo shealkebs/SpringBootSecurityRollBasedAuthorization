@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class LoginUserDetails implements UserDetails {
 
+
 	private UserLogin userLogin;
 	
 	

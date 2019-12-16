@@ -13,7 +13,7 @@
 			<label>User Name:</label> <input type="text" name="username" />
 			<label>Password:</label> <input type="Password" name="password" />
 			<input type="submit"/>
-			<a href="signup" value="signup">Sign Up</a>
+			<a href="signup">Sign Up</a>
 		</form:form>
 	</body>
 </html>
