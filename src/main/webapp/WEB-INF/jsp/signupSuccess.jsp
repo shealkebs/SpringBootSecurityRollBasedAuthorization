@@ -1,15 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page session="false"%>
+
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title><spring:message code="label.signupsuccess" /></title>
 </head>
 <body>
-<h3>Sign up Successful</h3>
-<a href="login">Login</a>
+<h3><spring:message code="label.signupsuccess" /></h3>
+<a href="login"><spring:message code="label.login" /></a>
 </body>
 </html>

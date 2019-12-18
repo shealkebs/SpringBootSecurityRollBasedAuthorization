@@ -1,17 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page session="false"%>
+
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Welcome User</title>
+<title><spring:message code="label.welcomeuser" /></title>
 </head>
 <body>
-	<h2>Welcome User</h2>
+	<h2><spring:message code="label.welcomeuser" /></h2>
 		<form:form action="doLogout" method="get">
-			<button type="submit">Logout</button>
+			<button type="submit"><spring:message code="label.logout" /></button>
 		</form:form>
 </body>
 </html>
